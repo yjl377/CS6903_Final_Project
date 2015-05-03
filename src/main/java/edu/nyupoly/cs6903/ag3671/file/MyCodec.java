@@ -12,10 +12,8 @@ import com.ctc.wstx.dtd.OptionalModel;
 public class MyCodec <T extends BaseFileStructure> {
 	
 	private final Codec<T> codec;
-	private final Class<T> clazz;
 	
 	public MyCodec(Class<T> clazz) {
-		this.clazz = clazz;
 		codec = Codecs.create(clazz);
 	}
 	
