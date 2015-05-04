@@ -510,6 +510,7 @@ __main:
         };
     }
  // MY CODE
+ /**Try to create the keys and signatures for both public and private usage**/
     private static KeyChainImpl keyChain; 
     private static KeyStorage keyStorage;
     private static Cryptor cryptor;
