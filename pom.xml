@@ -41,13 +41,29 @@
 					</archive>
 				</configuration>
 			</plugin>
+			
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.4.0</version>
+				<configuration>
+					<mainClass>edu.nyupoly.cs6903.ag3671.FTPClientExample</mainClass>
+				</configuration>
+			</plugin>
+			
 		</plugins>
 	</build>
 	<dependencies>
 		<dependency>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>exec-maven-plugin</artifactId>
+			<version>1.4.0</version>
+		</dependency>
+		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk15on</artifactId>
 			<version>1.52</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.preon</groupId>

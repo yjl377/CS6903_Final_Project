@@ -48,8 +48,6 @@ import org.apache.commons.net.io.CopyStreamListener;
 import org.apache.commons.net.util.TrustManagerUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
-import edu.emory.mathcs.backport.java.util.LinkedList;
-import edu.nyupoly.cs6903.ag3671.crypto.CryptoImpl;
 import edu.nyupoly.cs6903.ag3671.crypto.KeyChainImpl;
 
 /**
@@ -68,7 +66,7 @@ public final class FTPClientExample
         "\nDefault behavior is to download a file and use ASCII transfer mode.\n" +
         "\t-a - use local active mode (default is local passive)\n" +
         "\t-A - anonymous login (omit username and password parameters)\n" +
-        "\t-b - use binary transfer mode\n" +
+//        "\t-b - use binary transfer mode\n" +
         "\t-c cmd - issue arbitrary command (remote is used as a parameter if provided) \n" +
         "\t-d - list directory details using MLSD (remote is used as the pathname if provided)\n" +
         "\t-e - use EPSV with IPv4 (default false)\n" +
@@ -87,15 +85,18 @@ public final class FTPClientExample
         "\t-PrH server[:port] - HTTP Proxy host and optional port[80] \n" +
         "\t-PrU user - HTTP Proxy server username\n" +
         "\t-PrP password - HTTP Proxy server password\n" +
-        "\t-# - add hash display during transfers\n";
+        "\t-# - add hash display during transfers\n" + 
+        "\t--keygen - generate new keys\n";;
 
     public static void main(String[] args) throws UnknownHostException, Exception
     {
+    	// MY CODE
     	if(crypto(Collections.unmodifiableList(Arrays.asList(args)))) {
     		return;
     	};
+    	// MY CODE -- END
     	
-        boolean storeFile = false, binaryTransfer = false, error = false, listFiles = false, listNames = false, hidden = false;
+        boolean storeFile = false, binaryTransfer = true, error = false, listFiles = false, listNames = false, hidden = false;
         boolean localActive = false, useEpsvWithIPv4 = false, feat = false, printHash = false;
         boolean mlst = false, mlsd = false;
         boolean lenient = false;
@@ -125,9 +126,10 @@ public final class FTPClientExample
                 username = "anonymous";
                 password = System.getProperty("user.name")+"@"+InetAddress.getLocalHost().getHostName();
             }
-            else if (args[base].equals("-b")) {
-                binaryTransfer = true;
-            }
+            // Always use binary transfer 
+//            else if (args[base].equals("-b")) {
+//                binaryTransfer = true;
+//            }
             else if (args[base].equals("-c")) {
                 doCommand = args[++base];
                 minParams = 3;
@@ -507,7 +509,7 @@ __main:
             }
         };
     }
-    
+ // MY CODE
     private static KeyChainImpl keyChain; 
     private static KeyStorage keyStorage;
     private static Cryptor cryptor;
@@ -536,5 +538,6 @@ __main:
     	
     	return terminate;
     }
+ // MY CODE -- END
 }
 

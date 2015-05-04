@@ -61,7 +61,7 @@ public class CryptoTest {
 	public void testAesCrypto() throws Exception {
 		CryptoImpl cryptoImpl = new CryptoImpl();
 		Key clearKey = cryptoImpl.createRandomKeyForAES();
-		byte[] data = "Yo Yo Hello world".getBytes();
+		byte[] data = DATA.getBytes();
 		
 		byte[] ctext = cryptoImpl.encryptWithBlockCipher(clearKey.getEncoded(), data);
 		assertArrayEquals(data , cryptoImpl.decryptWithBlockCipher(clearKey.getEncoded(), ctext));

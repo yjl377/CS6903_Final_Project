@@ -3,19 +3,15 @@ package edu.nyupoly.cs6903.ag3671.crypto;
 import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.security.Signature;
-import java.security.spec.KeySpec;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+
+import org.bouncycastle.crypto.engines.AESEngine;
+import org.bouncycastle.jcajce.provider.symmetric.AES;
 
 
 public class CryptoImpl {
@@ -71,6 +67,7 @@ public class CryptoImpl {
 	}
 	
 	public byte[] decryptBlockCipherKey(KeyPair keyPair, byte[] payload) throws Exception {
+		
 		Cipher cipher = Cipher.getInstance(getPadding(), "BC");
 		cipher.init(Cipher.DECRYPT_MODE, keyPair.getPrivate() );
         return cipher.doFinal(payload);
@@ -80,6 +77,12 @@ public class CryptoImpl {
 		KeyGenerator generator = KeyGenerator.getInstance(getBlockCipherAlgorithm(), "BC");
         generator.init(128, new SecureRandom());
         return generator.generateKey();
+        
+//		SecureRandom random = new SecureRandom();
+//		byte[] keyBytes = new byte[16];
+//		random.nextBytes(keyBytes);
+//		SecretKeySpec key = new SecretKeySpec(keyBytes, getBlockCipherAlgorithm());
+//		return key;
 	}
 	
 	public byte[] encryptWithBlockCipher(byte[] key, byte[] payload) throws Exception {
