@@ -7,7 +7,6 @@ import org.codehaus.preon.Codec;
 import org.codehaus.preon.Codecs;
 import org.codehaus.preon.DecodingException;
 
-import com.ctc.wstx.dtd.OptionalModel;
 
 public class MyCodec <T extends BaseFileStructure> {
 	
@@ -17,17 +16,8 @@ public class MyCodec <T extends BaseFileStructure> {
 		codec = Codecs.create(clazz);
 	}
 	
-	public Optional<byte[]> encode(T obj) {
-		
-		try {
-			return Optional.of(Codecs.encode(obj, codec));
-			
-		} catch (IOException e) {
-			
-		}
-		
-				
-		return Optional.empty();
+	public byte[] encode(T obj) throws Exception {
+		return Codecs.encode(obj, codec);
 	}
 	
 	public Optional<T> decode(byte[] arr) {

@@ -70,10 +70,6 @@ public class CryptoImpl {
         return cipher.doFinal(wrappedKey.getEncoded());
 	}
 	
-	public byte[] getEncryptedBlockCipherKey(KeyPair keyPair) throws Exception {
-		return getEncryptedBlockCipherKey(keyPair, createRandomKeyForAES());
-	}
-	
 	public byte[] decryptBlockCipherKey(KeyPair keyPair, byte[] payload) throws Exception {
 		Cipher cipher = Cipher.getInstance(getPadding(), "BC");
 		cipher.init(Cipher.DECRYPT_MODE, keyPair.getPrivate() );
