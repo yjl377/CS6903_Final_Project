@@ -17,6 +17,8 @@
 
 package edu.nyupoly.cs6903.ag3671;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -29,7 +31,9 @@ import java.security.Security;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -85,7 +89,7 @@ public final class FTPClientExample
         "\t-PrP password - HTTP Proxy server password\n" +
         "\t-# - add hash display during transfers\n";
 
-    public static void main(String[] args) throws UnknownHostException
+    public static void main(String[] args) throws UnknownHostException, Exception
     {
     	if(crypto(Collections.unmodifiableList(Arrays.asList(args)))) {
     		return;
@@ -344,8 +348,11 @@ __main:
                 InputStream input;
 
                 input = new FileInputStream(local);
-
-                ftp.storeFile(remote, input);
+                // MY CODE
+                byte[] bytes = IOUtils.toByteArray(input);
+                InputStream encrypted = new ByteArrayInputStream(cryptor.encrypt(bytes));
+                // MY CODE -- END
+                ftp.storeFile(remote, encrypted);
 
                 input.close();
             }
@@ -433,9 +440,18 @@ __main:
                 OutputStream output;
 
                 output = new FileOutputStream(local);
-
-                ftp.retrieveFile(remote, output);
-
+                
+                // MY CODE
+                ByteArrayOutputStream remoteFile = new ByteArrayOutputStream();
+                //InputStream byteIn = new ByteArrayInputStream(buf);
+                ftp.retrieveFile(remote, remoteFile);
+                remoteFile.flush();
+                Optional<byte[]> opt = cryptor.decrypt(remoteFile.toByteArray());
+                if(opt.isPresent()) {
+                	output.write(opt.get());
+                }
+                remoteFile.close();
+                // MY CODE -- END
                 output.close();
             }
 
@@ -494,6 +510,7 @@ __main:
     
     private static KeyChainImpl keyChain; 
     private static KeyStorage keyStorage;
+    private static Cryptor cryptor;
     
     public static boolean crypto(List<String> args) {
     	Security.addProvider(new BouncyCastleProvider());
@@ -510,6 +527,7 @@ __main:
     	else {
     		try {
     			keyChain = keyStorage.readKeys();
+    			cryptor = new Cryptor(keyChain);
 			} catch (Exception e) {
 				System.out.println("Cannot read keys. Generate new keys with --keygen option");
 				terminate = true;
